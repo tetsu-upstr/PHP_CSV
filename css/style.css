@@ -1,9 +1,9 @@
+/* テーブル */
 table, th, td {
   border-collapse: collapse;
   border: 1px solid #ccc;
   line-height: 1.5;
 }
-
 table.item-table th {
   width: 150px;
   padding: 10px;
@@ -16,4 +16,9 @@ table.item-table td {
   width: 350px;
   padding: 10px;
   vertical-align: top;
+}
+/* ボタン */
+.btn a {
+  text-decoration: none;
+  color: #3f3f3f;
 }
