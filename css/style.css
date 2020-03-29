@@ -1,3 +1,7 @@
+body {
+  font-size: 12px;
+}
+
 /* テーブル */
 table, th, td {
   border-collapse: collapse;
@@ -20,5 +24,17 @@ table.item-table td {
 /* ボタン */
 .btn a {
   text-decoration: none;
-  color: #3f3f3f;
+  color: #fff;
+}
+
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  background: #668ad8;/*ボタン色*/
+  color: #FFF;
+  border-bottom: solid 4px #627295;
+  border-radius: 3px;
+  margin: 10px;
 }
