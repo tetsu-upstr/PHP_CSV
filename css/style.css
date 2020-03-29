@@ -1,5 +1,23 @@
 body {
   font-size: 12px;
+  margin: 0;
+}
+
+header {
+  position: relative;
+  height: 40px;
+  color: #fff;
+  background-color: #303849;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.12);
+}
+header p {
+  font-size: 16px;
+  position: absolute;
+  top: 30%;
+  transform: translateY(-50%);
+  line-height: 40px;
 }
 
 /* テーブル */
@@ -7,20 +25,34 @@ table, th, td {
   border-collapse: collapse;
   border: 1px solid #ccc;
   line-height: 1.5;
+  text-align: center;
+}
+table th {
+  background: #303849;
+  color: #fff;
 }
 table.item-table th {
   width: 150px;
   padding: 10px;
   font-weight: bold;
   vertical-align: top;
-  background: #3f3f3f;
-  color: #fff;
+  background: #303849;
 }
 table.item-table td {
   width: 350px;
   padding: 10px;
   vertical-align: top;
 }
+.th-1 {
+  width: 300px;
+}
+.th-2 {
+  width: 400px;
+}
+.th-3 {
+  width: 100px;
+}
+
 /* ボタン */
 .btn a {
   text-decoration: none;
@@ -32,9 +64,21 @@ table.item-table td {
   display: inline-block;
   padding: 0.5em 1em;
   text-decoration: none;
-  background: #668ad8;/*ボタン色*/
-  color: #FFF;
-  border-bottom: solid 4px #627295;
+  background: #303849;
+  color: #FFF; 
+  border-bottom: solid 4px #2f3749;
   border-radius: 3px;
   margin: 10px;
+}
+
+input {
+  width: 100px;
+  height: 30px;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+input:focus {
+  outline: 0;
+  box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.4);
+  border: solid 2px #666;
 }
