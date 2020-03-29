@@ -13,7 +13,7 @@
 </head>
 
 <header>
-  <p><i class="fas fa-tachometer-alt"></i> Sales dashboard</p>
+  <p><i class="fas fa-tachometer-alt"></i><a href="index.php"> Sales dashboard</a> </p>
 </header>
 
 

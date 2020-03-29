@@ -3,6 +3,11 @@
 <body>
 <?php
 
+// クロスサイトスクリプティング対策
+function h($s) {
+  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
 // 売上実績の検索
 if(isset($_POST['search'])) {
 
@@ -13,21 +18,21 @@ if(isset($_POST['search'])) {
 
   // 品名と店舗の検索
   if (!empty($_POST['name']) && !empty($_POST['store'])) {
-    $name = $_POST['name'];
-    $store = $_POST['store'];
+    $name = filter_input(INPUT_POST, 'name');
+    $store = filter_input(INPUT_POST, 'store');
     $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE item_name LIKE '%{$name}%' AND store LIKE '%{$store}%' ";
     // var_dump($sql);
   }
     
   // 品名検索
   if (!empty($_POST['name']) && empty($_POST['store'])) {
-    $name = $_POST['name'];
+    $name = filter_input(INPUT_POST, 'name');
     $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE item_name LIKE '%{$name}%' ";
   }
 
   // 店舗検索
   if (!empty($_POST['store']) && empty($_POST['name'])){
-    $store = $_POST['store'];
+    $store = filter_input(INPUT_POST, 'store');
     $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE store LIKE '%{$store}%' ";
   }
 
@@ -38,14 +43,19 @@ if(isset($_POST['search'])) {
   $result->bindValue(':item_name', $name, PDO::PARAM_STR);
   $result->bindValue(':store', $store, PDO::PARAM_STR);
   $result->execute();
+
+  // ヒット件数を表示
+  $count = $result->rowCount();
+  echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
 }
+
 
 // 集計期間の指定
 if(isset($_POST['period_search'])) {
 
   $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result";
 
-  if($_POST['start'] == "" && $_POST['end'] == "") {
+  if($_POST['start'] === "" && $_POST['end'] === "") {
     $sql .= " GROUP BY item_name, store, DATE_FORMAT(month, '%Y年%m月') ORDER BY month";
   } else {
     $start = $_POST['start'];
@@ -54,9 +64,11 @@ if(isset($_POST['period_search'])) {
   }
 
   $result = $pdo->prepare($sql);
-  // $result->bindValue(':item_name', $store, PDO::PARAM_STR);
-  // $result->bindValue(':store', $end, PDO::PARAM_STR);
   $result->execute();
+
+  // ヒット件数を表示
+  $count = $result->rowCount();
+  echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
 
 }
 
@@ -64,10 +76,11 @@ if(isset($_POST['period_search'])) {
 
   <table class="function-table">
     <tr>
-      <th class="th-2">検索</th>
-      <th class="th-2">集計期間</th>
-      <th class="th-3"></th>
-      <th class="th-3"></th>
+      <th>検索</th>
+      <th>集計期間</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
     <form action="index.php" method="POST">
       <td>
@@ -80,16 +93,17 @@ if(isset($_POST['period_search'])) {
     <form action="index.php" method="POST">
       <td><input type="date" name="start">〜<input type="date" name="end">
       <input type="submit" name="period_search" class="btn" value="検索"></td>
-      <td><button class="btn"><a href="#">商品登録</a></button></td>
+      <td><button class="btn"><a href="input.php">商品登録</a></button></td>
       <td><button class="btn cp_tooltip"><a href="#">取り込み</a>
-      <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td> </tr>
+      <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td>
+      <td><button class="btn"><a href="#">POP</a></button></td></tr>
     </form>
   </table>
 
 
 
 
-<p><i class="fas fa-money-check"></i> 販売実績</p>
+<p class="table-title"><i class="fas fa-money-check"></i> 販売実績</p>
 <table class="item-table">
   <tr>
     <th>品名</th>
@@ -100,32 +114,36 @@ if(isset($_POST['period_search'])) {
     <th>店舗</th>
   
     <?php
-    foreach($result as $row) {
-      echo '<tr>';
-      echo '<td>' . $row['item_name'] .'</td>';
-      echo '<td>' . $row['sale_month'] .'</td>';
-      echo '<td>' . $row['count'] .'</td>';
-      echo '<td>' . $row['unit_price'] .'</td>';
-      echo '<td>' . number_format($row['unit_price'] * $row['count']) .'</td>';
-      echo '<td>' . $row['store'] .'</td>';
-      echo '</tr>';
+    if(isset($_POST['search']) || isset($_POST['period_search'])) {
+      foreach($result as $row) {
+        echo '<tr>';
+        echo '<td>' . $row['item_name'] .'</td>';
+        echo '<td>' . $row['sale_month'] .'</td>';
+        echo '<td>' . $row['count'] .'</td>';
+        echo '<td>' . $row['unit_price'] .'</td>';
+        echo '<td>' . number_format($row['unit_price'] * $row['count']) .'</td>';
+        echo '<td>' . $row['store'] .'</td>';
+        echo '</tr>';
+      }
     }
     ?>
 
 </table>
 
+
 <?php
 
-// 商品リスト
+// 商品リストの呼び出し
 $sql = "SELECT * FROM item";
-$result = $pdo->prepare($sql);
+$result = $pdo->query($sql);
 $result->execute();
 
 ?>
 
-<p><i class="fas fa-save"></i> 商品リスト</p>
+<p class="table-title"><i class="fas fa-save"></i> 商品リスト</p>
 <table class="item-table">
   <tr>
+    <th></th>
     <th>カテゴリ</th>
     <th>品名</th>
     <th>JAN</th>
@@ -137,7 +155,9 @@ $result->execute();
   
     <?php
     foreach($result as $row) {
-      echo '<tr>';
+      echo '<tr><form action="index.php" method="POST">';
+      echo '<td><input class="check" type="checkbox" name="check"></td>';
+      echo '</form>';
       echo '<td>' . $row['category'] .'</td>';
       echo '<td>' . $row['item_name'] .'</td>';
       echo '<td>' . $row['jan'] .'</td>';
