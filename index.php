@@ -35,6 +35,8 @@ if(isset($_POST['search'])) {
   $sql .= " GROUP BY item_name, store, DATE_FORMAT(month, '%Y年%m月') ORDER BY month";
 
   $result = $pdo->prepare($sql);
+  $result->bindValue(':item_name', $name, PDO::PARAM_STR);
+  $result->bindValue(':store', $store, PDO::PARAM_STR);
   $result->execute();
 }
 
@@ -52,6 +54,8 @@ if(isset($_POST['period_search'])) {
   }
 
   $result = $pdo->prepare($sql);
+  // $result->bindValue(':item_name', $store, PDO::PARAM_STR);
+  // $result->bindValue(':store', $end, PDO::PARAM_STR);
   $result->execute();
 
 }
@@ -62,6 +66,7 @@ if(isset($_POST['period_search'])) {
     <tr>
       <th class="th-2">検索</th>
       <th class="th-2">集計期間</th>
+      <th class="th-3"></th>
       <th class="th-3"></th>
     </tr>
     <form action="index.php" method="POST">
@@ -75,7 +80,9 @@ if(isset($_POST['period_search'])) {
     <form action="index.php" method="POST">
       <td><input type="date" name="start">〜<input type="date" name="end">
       <input type="submit" name="period_search" class="btn" value="検索"></td>
-      <td><button class="btn"><a href="#">商品登録</a></button></td> </tr> 
+      <td><button class="btn"><a href="#">商品登録</a></button></td>
+      <td><button class="btn cp_tooltip"><a href="#">取り込み</a>
+      <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td> </tr>
     </form>
   </table>
 

@@ -58,17 +58,51 @@ table.item-table td {
   text-decoration: none;
   color: #fff;
 }
-
 .btn {
   cursor: pointer;
   display: inline-block;
   padding: 0.5em 1em;
   text-decoration: none;
   background: #303849;
-  color: #FFF; 
+  color: #fff; 
   border-bottom: solid 4px #2f3749;
   border-radius: 3px;
   margin: 10px;
+}
+/* ポップアップ ツールチップ */
+.cp_tooltip {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+}
+.cp_tooltip .cp_tooltiptext {
+	position: absolute;
+	z-index: 1;
+	bottom: 100%;
+	left: 0;
+	visibility: hidden;
+	width: auto;
+	white-space: nowrap;
+	padding: 0.3em 0.5em;
+	transition: opacity 1s;
+	text-align: center;
+	opacity: 0;
+	color: #fff;
+	border-radius: 6px;
+	background-color: #303849ba;
+}
+.cp_tooltip .cp_tooltiptext::after {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -30px;
+	content: ' ';
+	border: 5px solid transparent;
+	border-top-color: #303849ba;
+}
+.cp_tooltip:hover .cp_tooltiptext {
+	visibility: visible;
+	opacity: 1;
 }
 
 input {
