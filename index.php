@@ -1,9 +1,6 @@
-<?php require 'header.php'; ?>
+<?php require 'header.php';
 
-<body>
-<?php
-
-// クロスサイトスクリプティング対策
+// クロスサイトスクリプティング対策：表示の時に使用
 function h($s) {
   return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
@@ -74,6 +71,7 @@ if(isset($_POST['period_search'])) {
 
 ?>
 
+<body>
   <table class="function-table">
     <tr>
       <th>検索</th>
