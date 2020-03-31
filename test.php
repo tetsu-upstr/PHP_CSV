@@ -1,5 +1,4 @@
 <?php
-require 'connect.php';
 
 /* HTML特殊文字をエスケープする関数 */
 function h($str) {
@@ -29,7 +28,7 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
 
         $tmp_name = $_FILES['upfile']['tmp_name'];
         $detect_order = 'ASCII,JIS,UTF-8,CP51932,SJIS-win';
-        // setlocale(LC_ALL, 'ja_JP.UTF-8');
+        setlocale(LC_ALL, 'ja_JP.UTF-8');
 
         /* 文字コードを変換してファイルを置換 */
         $buffer = file_get_contents($tmp_name);
@@ -41,17 +40,32 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
         file_put_contents($tmp_name, mb_convert_encoding($buffer, 'UTF-8', $encoding));
         unset($buffer);
 
-        $stmt = $pdo->prepare('INSERT INTO sales_result(item_name, jan, month, amount, unit_price, store) VALUES (?, ?, ?, ?, ?, ?)');
+        /* データベースに接続 */
+        $pdo = new PDO(
+            'mysql:dbname=Sales;host=localhost;charset=utf8',
+            'root',
+            '',
+            array(
+                // カラム型に合わない値がINSERTされようとしたときSQLエラーとする
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_mode='TRADITIONAL'",
+                // SQLエラー発生時にPDOExceptionをスローさせる
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                // プリペアドステートメントのエミュレーションを無効化する
+                PDO::ATTR_EMULATE_PREPARES => false,
+            )
+        );
+        $stmt = $pdo->prepare('INSERT INTO sales_result VALUES (?, ?, ?, ?, ?, ?, ?)');
 
         /* トランザクション処理 */
         $pdo->beginTransaction();
         try {
-            $fp = fopen($tmp_name, 'r');
+            $fp = fopen($tmp_name, 'rb');
             while ($row = fgetcsv($fp)) {
-                if ($row === array(NULL)) {
+                if ($row === array(null)) {
+                    // 空行はスキップ
                     continue;
                 }
-                if (count($row) !== 6) {
+                if (count($row) !== 7) {
                     // カラム数が異なる無効なフォーマット
                     throw new RuntimeException('Invalid column detected');
                 }
@@ -62,8 +76,7 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
                 throw new RuntimeException('CSV parsing error');
             }
             fclose($fp);
-						$pdo->commit();
-						
+            $pdo->commit();
         } catch (Exception $e) {
             fclose($fp);
             $pdo->rollBack();
@@ -89,7 +102,7 @@ if (isset($_FILES['upfile']['error']) && is_int($_FILES['upfile']['error'])) {
 }
 
 // XHTMLとしてブラウザに認識させる
-// (IE8以下はサポート対象外)
+// (IE8以下はサポート対象外ｗ)
 header('Content-Type: application/xhtml+xml; charset=utf-8');
 
 ?>
@@ -99,18 +112,18 @@ header('Content-Type: application/xhtml+xml; charset=utf-8');
   <title>CSV to MySQL importation test</title>
 </head>
 <body>
-	<?php if (isset($msg)): ?>
-		<fieldset>
-			<legend>Result</legend>
-			<span style="color:<?=h($msg[0])?>;"><?=h($msg[1])?></span>
-		</fieldset>
-	<?php endif; ?>
-		<form enctype="multipart/form-data" method="POST" action="">
-			<fieldset>
-				<legend>Select File</legend>
-				Filename(CSV is only supported): <input type="file" name="upfile" /><br />
-				<input type="submit" value="Upload" />
-			</fieldset>
-		</form>
+<?php if (isset($msg)): ?>
+  <fieldset>
+    <legend>Result</legend>
+    <span style="color:<?=h($msg[0])?>;"><?=h($msg[1])?></span>
+  </fieldset>
+<?php endif; ?>
+  <form enctype="multipart/form-data" method="post" action="">
+    <fieldset>
+      <legend>Select File</legend>
+      Filename(CSV is only supported): <input type="file" name="upfile" /><br />
+      <input type="submit" value="Upload" />
+    </fieldset>
+  </form>
 </body>
 </html>
