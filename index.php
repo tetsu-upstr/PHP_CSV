@@ -92,7 +92,7 @@ if(isset($_POST['period_search'])) {
       <td><input type="date" name="start">〜<input type="date" name="end">
       <input type="submit" name="period_search" class="btn" value="検索"></td>
       <td><button class="btn"><a href="input.php">商品登録</a></button></td>
-      <td><button class="btn cp_tooltip"><a href="#">取り込み</a>
+      <td><button class="btn cp_tooltip"><a href="csv.php">取り込み</a>
       <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td>
       <td><button class="btn"><a href="#">POP</a></button></td></tr>
     </form>

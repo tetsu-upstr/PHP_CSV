@@ -96,9 +96,18 @@ header('Content-Type: application/xhtml+xml; charset=utf-8');
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>CSV to MySQL importation test</title>
+	<title>CSV to MySQL importation test</title>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
+<header>
+  <p><i class="fas fa-tachometer-alt"></i><a href="index.php"> Sales dashboard</a> </p>
+</header>
+
 	<?php if (isset($msg)): ?>
 		<fieldset>
 			<legend>Result</legend>
@@ -108,8 +117,8 @@ header('Content-Type: application/xhtml+xml; charset=utf-8');
 		<form enctype="multipart/form-data" method="POST" action="">
 			<fieldset>
 				<legend>Select File</legend>
-				Filename(CSV is only supported): <input type="file" name="upfile" /><br />
-				<input type="submit" value="Upload" />
+				CSV形式のみ対応: <input type="file" name="upfile" /><br />
+				<input type="submit" value="アップロード" />
 			</fieldset>
 		</form>
 </body>
