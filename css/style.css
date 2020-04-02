@@ -112,3 +112,23 @@ input:focus {
 .check {
   width: 10px;
 }
+
+/* 商品登録フォーム */
+.input-div {
+  width: 100px;
+}
+ul li {
+  list-style: none;
+  
+}
+li.item-li {
+  margin-bottom: 10px;
+}
+label {
+  margin-right: 10px;
+  width: 70px;
+  float: left;
+}
+input.btn-register {
+  margin-left: 100px;
+}

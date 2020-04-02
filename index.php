@@ -1,10 +1,5 @@
 <?php require 'header.php';
 
-// クロスサイトスクリプティング対策：表示の時に使用
-function h($s) {
-  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-}
-
 // 売上実績の検索
 if(isset($_POST['search'])) {
 
@@ -91,7 +86,7 @@ if(isset($_POST['period_search'])) {
     <form action="index.php" method="POST">
       <td><input type="date" name="start">〜<input type="date" name="end">
       <input type="submit" name="period_search" class="btn" value="検索"></td>
-      <td><button class="btn"><a href="input.php">商品登録</a></button></td>
+      <td><button class="btn"><a href="item_input.php">商品登録</a></button></td>
       <td><button class="btn cp_tooltip"><a href="csv.php">取り込み</a>
       <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td>
       <td><button class="btn"><a href="#">POP</a></button></td></tr>
