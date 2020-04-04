@@ -129,6 +129,10 @@ label {
   width: 70px;
   float: left;
 }
-input.btn-register {
+input.btn-submit {
   margin-left: 100px;
+}
+/* エラーメッセージ */
+.error {
+  color: red;
 }
