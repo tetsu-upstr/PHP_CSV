@@ -38,13 +38,7 @@ if (!empty($_POST['btn_submit'])) {
       </li>
       <li class="item-li">
         <label for="category">カテゴリ</label>
-        <?php if($_POST['category'] === 'tea_bag'){ echo 'TB';}
-          elseif($_POST['category'] === 'leaf_tea'){ echo 'リーフ';}
-          elseif($_POST['category'] === 'barley_tea'){ echo '麦茶';}
-          elseif($_POST['category'] === 'health_tea'){ echo '健康茶';}
-          elseif($_POST['category'] === 'powder_tea'){ echo '粉末茶';}
-          elseif($_POST['category'] === 'other'){ echo 'その他';}
-        ?>
+        <?php echo h($_POST['category']); ?>
       </li>
       <li class="item-li">
         <label for="item_name">品名:</label>
@@ -74,10 +68,10 @@ if (!empty($_POST['btn_submit'])) {
         <label for="size">商品サイズ:</label>
         <?php echo h($_POST['size']); ?>
       </li>
+
       <p>上記の情報で正しければ、登録ボタンを押して確定してください。</p>
-      <!-- <a href="item_input.php?action=rewrite">&laquo;&nbsp;修正</a> -->
       <input type="submit" name="back" class="btn" value="戻る">
-      <input  type="submit" name="btn_submit" class="btn btn-submit" value="登録">
+      <input type="submit" name="btn_submit" class="btn btn-submit" value="登録">
       <input type="hidden" name="category" value="<?php echo h($_POST['category']); ?>">
       <input type="hidden" name="item_name" value="<?php echo h($_POST['item_name']); ?>">
       <input type="hidden" name="jan" value="<?php echo h($_POST['jan']); ?>">
@@ -95,12 +89,20 @@ if (!empty($_POST['btn_submit'])) {
 
 <!-- 完了画面 -->
 <?php if ($pageFlag === 2) : ?>
-  <!-- <?php if ($_POST['csrf'] === $_SESSION['csrfToken']) : ?> -->
 
   <?php
-  $sql = 'INSERT INTO Sales_result SET item_name=?,  )';
-
-  // $item_name = $_POST['item_name'];
+  $sql = 'INSERT INTO item (item_name, category, jan, standard, number_contained, regular_price, expiration_date, size) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindvalue(1, $_POST['item_name'], PDO::PARAM_STR);
+  $stmt->bindvalue(2, $_POST['category'], PDO::PARAM_STR);
+  $stmt->bindvalue(3, $_POST['jan'], PDO::PARAM_INT);
+  $stmt->bindvalue(4, $_POST['standard'], PDO::PARAM_STR);
+  $stmt->bindvalue(5, $_POST['number_contained'], PDO::PARAM_INT);
+  $stmt->bindvalue(6, $_POST['regular_price'], PDO::PARAM_INT);
+  $stmt->bindvalue(7, $_POST['expiration_date'], PDO::PARAM_INT);
+  $stmt->bindvalue(8, $_POST['size'], PDO::PARAM_STR);
+  $stmt->execute();
 
   ?>
 
@@ -108,10 +110,6 @@ if (!empty($_POST['btn_submit'])) {
   
   <a href="index.php">ホームに戻る</a>
 
-  <!-- トークンの削除 -->
-  <!-- <?php unset($_SESSION['csrfToken']); ?> -->
-
-  <?php endif; ?>
 <?php endif; ?>
 
 
@@ -138,12 +136,12 @@ if (!empty($_POST['btn_submit'])) {
         <label for="category">カテゴリ</label>
         <select name="category" id="category">
           <option value="">選択してください</option>
-          <option value="tea_bag">TB</option>
-          <option value="leaf_tea">リーフ</option>
-          <option value="barley_tea">麦茶</option>
-          <option value="health_tea">健康茶</option>
-          <option value="powder_tea">粉末茶</option>
-          <option value="other">その他</option>
+          <option value="TB">TB</option>
+          <option value="リーフ">リーフ</option>
+          <option value="麦茶">麦茶</option>
+          <option value="健康茶">健康茶</option>
+          <option value="粉末茶">粉末茶</option>
+          <option value="その他">その他</option>
         </select>
       </li>
       <li class="item-li">
