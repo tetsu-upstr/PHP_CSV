@@ -1,7 +1,6 @@
 <?php
-// sesson_start();
 require 'header.php';
-require 'function/validation.php';
+require 'validation.php';
 
 // クロスサイトスクリプティング対策のサニタイズ：表示時に使用
 function h($s) {
@@ -15,6 +14,18 @@ function h($s) {
 // 画面遷移の判定
 $pageFlag = 0;
 $error = validatation_item($_POST);
+
+// if (!empty($_POST['jan'])) {
+//   // JAN(ユニーク)の重複確認
+//   $stmt = $pdo->prepare("SELECT * FROM item WHERE jan = :jan limit 1");
+//   $stmt->execute(array(':jan' => $_POST['jan']));
+//   $result = $stmt->fetch();
+
+//   if ($result > 0) {
+//     $error[] = '「JAN」は既に登録されています。';
+//   }
+
+// }
 
 // Flag1 確認画面
 if (!empty($_POST['btn_confirm']) && empty($error)) {
@@ -103,7 +114,6 @@ if (!empty($_POST['btn_submit'])) {
   $stmt->bindvalue(7, $_POST['expiration_date'], PDO::PARAM_INT);
   $stmt->bindvalue(8, $_POST['size'], PDO::PARAM_STR);
   $stmt->execute();
-
   ?>
 
   <p>商品登録が完了しました。</p>

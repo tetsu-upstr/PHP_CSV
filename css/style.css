@@ -49,6 +49,11 @@ table.item-table td {
   vertical-align: top;
 }
 
+/* 商品リストタイトル */
+.item-title {
+  display: flex;
+}
+
 
 /* ボタン */
 .btn {

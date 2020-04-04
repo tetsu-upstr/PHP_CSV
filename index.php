@@ -133,7 +133,10 @@ $result->execute();
 
 ?>
 
+<div class="item-title">
 <p class="table-title"><i class="fas fa-save"></i> 商品リスト</p>
+<button class="btn"><a href="">商品マスタ編集</a></button>
+</div>
 <table class="item-table">
   <tr>
     <th></th>

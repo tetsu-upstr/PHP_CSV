@@ -13,8 +13,21 @@ function validatation_item($data) {
     $error[] = '「品名」は30文字以内で入力してください。';
   }
 
-  if (empty($data['jan']) || 13 < strlen($data['jan'])) {
-    $error[] = '「JAN」は13文字以内で入力してください。';
+  if (empty($data['jan']) || 13 !== strlen($data['jan'])) {
+    $error[] = '「JAN」が正しく入力されていません。';
+  }
+
+  if (!empty($data['jan'])) {
+    // JAN(ユニーク)の重複確認
+    $pdo = new PDO('mysql:dbname=Sales;host=localhost;charset=utf8mb4','root','');
+    $stmt = $pdo->prepare("SELECT * FROM item WHERE jan = :jan limit 1");
+    $stmt->execute(array(':jan' => $data['jan']));
+    $result = $stmt->fetch();
+
+    if ($result > 0) {
+      $error[] = '「JAN」は既に登録されています。';
+    }
+  
   }
 
   if (empty($data['standard'])) {
