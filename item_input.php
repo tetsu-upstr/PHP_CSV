@@ -1,6 +1,6 @@
 <?php
 require 'header.php';
-require 'validation.php';
+require 'function/validation.php';
 
 // クロスサイトスクリプティング対策のサニタイズ：表示時に使用
 function h($s) {

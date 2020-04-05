@@ -1,69 +1,6 @@
-<?php require 'header.php';
-
-// 売上実績の検索
-if(isset($_POST['search'])) {
-
-  // 全件検索
-  if (empty($_POST['name']) && empty($_POST['store'])) {
-    $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result ";
-  }
-
-  // 品名と店舗の検索
-  if (!empty($_POST['name']) && !empty($_POST['store'])) {
-    $name = filter_input(INPUT_POST, 'name');
-    $store = filter_input(INPUT_POST, 'store');
-    $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE item_name LIKE '%{$name}%' AND store LIKE '%{$store}%' ";
-    // var_dump($sql);
-  }
-    
-  // 品名検索
-  if (!empty($_POST['name']) && empty($_POST['store'])) {
-    $name = filter_input(INPUT_POST, 'name');
-    $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE item_name LIKE '%{$name}%' ";
-  }
-
-  // 店舗検索
-  if (!empty($_POST['store']) && empty($_POST['name'])){
-    $store = filter_input(INPUT_POST, 'store');
-    $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result WHERE store LIKE '%{$store}%' ";
-  }
-
-  // SQL共通の整列条件
-  $sql .= " GROUP BY item_name, store, DATE_FORMAT(month, '%Y年%m月') ORDER BY month";
-
-  $result = $pdo->prepare($sql);
-  $result->bindValue(':item_name', $name, PDO::PARAM_STR);
-  $result->bindValue(':store', $store, PDO::PARAM_STR);
-  $result->execute();
-
-  // ヒット件数を表示
-  $count = $result->rowCount();
-  echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
-}
-
-
-// 集計期間の指定
-if(isset($_POST['period_search'])) {
-
-  $sql = "SELECT item_name, DATE_FORMAT(month, '%Y年%m月') as sale_month, SUM(amount) as count, unit_price, store FROM sales_result";
-
-  if($_POST['start'] === "" && $_POST['end'] === "") {
-    $sql .= " GROUP BY item_name, store, DATE_FORMAT(month, '%Y年%m月') ORDER BY month";
-  } else {
-    $start = $_POST['start'];
-    $end = $_POST['end'];
-    $sql .= " WHERE month BETWEEN '$start' AND '$end' GROUP BY DATE_FORMAT(month, '%Y年%m月') ORDER BY month";
-  }
-
-  $result = $pdo->prepare($sql);
-  $result->execute();
-
-  // ヒット件数を表示
-  $count = $result->rowCount();
-  echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
-
-}
-
+<?php
+require 'header.php';
+require 'function/search.php';
 ?>
 
 <body>
@@ -79,21 +16,23 @@ if(isset($_POST['period_search'])) {
       <td>
         <input type="text" name="name" placeholder="品名">
         <input type="text" name="store" placeholder="店名">
+      </td>
+      <td>
+        <input type="date" name="start">〜<input type="date" name="end">
         <input type="submit" name="search" class="btn" value="検索">
       </td>
-    </form>
-    
-    <form action="index.php" method="POST">
-      <td><input type="date" name="start">〜<input type="date" name="end">
-      <input type="submit" name="period_search" class="btn" value="検索"></td>
-      <td><button class="btn"><a href="item_input.php">商品登録</a></button></td>
-      <td><button class="btn cp_tooltip"><a href="csv.php">取り込み</a>
-      <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button></td>
-      <td><button class="btn"><a href="#">POP</a></button></td></tr>
+      <td>
+        <button class="btn"><a href="item_input.php">商品登録</a></button>
+      </td>
+      <td>
+        <button class="btn cp_tooltip"><a href="csv.php">取り込み</a>
+        <span class="cp_tooltiptext">CSVファイルを読み込みます</span></i></button>
+      </td>
+      <td>
+        <button class="btn"><a href="#">POP</a></button>
+      </td>
     </form>
   </table>
-
-
 
 
 <p class="table-title"><i class="fas fa-money-check"></i> 販売実績</p>
@@ -107,14 +46,14 @@ if(isset($_POST['period_search'])) {
     <th>店舗</th>
   
     <?php
-    if(isset($_POST['search']) || isset($_POST['period_search'])) {
+    if(isset($_POST['search'])) {
       foreach($result as $row) {
         echo '<tr>';
         echo '<td>' . $row['item_name'] .'</td>';
         echo '<td>' . $row['sale_month'] .'</td>';
-        echo '<td>' . $row['count'] .'</td>';
+        echo '<td>' . $row['amount'] .'</td>';
         echo '<td>' . $row['unit_price'] .'</td>';
-        echo '<td>' . number_format($row['unit_price'] * $row['count']) .'</td>';
+        echo '<td>' . $row['proceeds'] .'</td>';
         echo '<td>' . $row['store'] .'</td>';
         echo '</tr>';
       }
@@ -126,7 +65,7 @@ if(isset($_POST['period_search'])) {
 
 <?php
 
-// 商品リストの呼び出し
+// 商品リストの呼び出しSQL
 $sql = "SELECT * FROM item";
 $result = $pdo->query($sql);
 $result->execute();

@@ -3,6 +3,8 @@
 // 商品登録
 function validatation_item($data) {
 
+  require './connect.php';
+
   $error = [];
   
   if (($data['category'] === '')) {
@@ -19,7 +21,6 @@ function validatation_item($data) {
 
   if (!empty($data['jan'])) {
     // JAN(ユニーク)の重複確認
-    $pdo = new PDO('mysql:dbname=Sales;host=localhost;charset=utf8mb4','root','');
     $stmt = $pdo->prepare("SELECT * FROM item WHERE jan = :jan limit 1");
     $stmt->execute(array(':jan' => $data['jan']));
     $result = $stmt->fetch();
