@@ -58,4 +58,6 @@
 
   // ヒット件数を表示
   $count = $result->rowCount();
-  echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
+  if ($count > 0) {
+    echo '<p class="table-title">' . $count.'件のデータが登録されています。</p>';
+  }
