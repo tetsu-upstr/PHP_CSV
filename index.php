@@ -3,6 +3,17 @@ require 'header.php';
 require 'function/search.php';
 ?>
 
+<!-- 
+  List.js 並び替え機能
+    1.CDN読み込み
+    2. <table id="items">のidを引数にクラスを呼び出す
+    3.ソートしたいヘッダーを<th class="sort" data-sort="amount">数量</th>と指定
+    4.ソートしたい要素のクラス名を<td class="amount"></td>と指定
+    5.<tbody class="list">とクラス名を指定
+    6.scriptタグ内のoptionでソートしたい要素名を追記
+-->
+
+
 <body>
 <div class="container">
   <table class="function-table">
@@ -40,30 +51,33 @@ require 'function/search.php';
 
 <div class="container">
   <caption class="table-title">販売実績</caption>
-  <table class="item-table">
-    <tr>
-      <th>品名</th>
-      <th>販売月</th>
-      <th>数量</th>
-      <th>単価</th>
-      <th>売上金額 <a href="">▲</a> <a href="">▼</a></th>
-      <th>店舗</th>
-    
-      <?php
-      if(isset($_POST['search'])) {
-        foreach($result as $row) {
-          echo '<tr>';
-          echo '<td>' . $row['item_name'] .'</td>';
-          echo '<td>' . $row['sale_month'] .'</td>';
-          echo '<td>' . $row['amount'] .'</td>';
-          echo '<td>' . $row['unit_price'] .'</td>';
-          echo '<td>' . $row['proceeds'] .'</td>';
-          echo '<td>' . $row['store'] .'</td>';
-          echo '</tr>';
+  <table class="item-table" id="results">
+    <thead>
+      <tr>
+        <th class="sort" data-sort="name">品名</th>
+        <th>販売月</th>
+        <th class="sort" data-sort="amount">数量</th>
+        <th>単価</th>
+        <th class="sort" data-sort="proceeds">売上金額</th>
+        <th>店舗</th>
+      </tr>
+    </thead>
+    <tbody class="list">
+        <?php
+        if(isset($_POST['search'])) {
+          foreach($result as $row) {
+            echo '<tr>';
+            echo '<td class="name">' . $row['item_name'] .'</td>';
+            echo '<td>' . $row['sale_month'] .'</td>';
+            echo '<td class="amount">' . $row['amount'] .'</td>';
+            echo '<td>' . $row['unit_price'] .'</td>';
+            echo '<td class="proceeds">' . $row['proceeds'] .'</td>';
+            echo '<td>' . $row['store'] .'</td>';
+            echo '</tr>';
+          }
         }
-      }
-      ?>
-  
+        ?>
+    </tbody>
   </table>
 </div>
 
@@ -116,12 +130,17 @@ require 'function/search.php';
 
 // テーブルの並び替え
 var options = {
-  valueNames: [ 'category', 'name', 'jan' ]
+  valueNames: [ 'category', 'name', 'jan', 'amount', 'proceeds']
 };
 
-var userList = new List('items', options);
-userList.sort( 'category', {order : 'desc' });
-userList.sort( 'jan', {order : 'desc' });
+var itemList = new List('items', options);
+itemList.sort( 'category', {order : 'desc' });
+itemList.sort( 'jan', {order : 'desc' });
+
+var results = new List('results', options);
+results.sort( 'amount', {order : 'desc' });
+results.sort( 'proceeds', {order : 'desc' });
+
 
 </script>
 </body>
