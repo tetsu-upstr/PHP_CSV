@@ -6,6 +6,9 @@ a {
   text-decoration: none;
   color: #fff;
 }
+.container {
+  margin-left: 10px;
+}
 
 header {
   position: relative;
@@ -25,8 +28,8 @@ header p {
 }
 
 /* テーブル */
-.table-title {
-  margin-left: 10px;
+caption {
+  padding: 10px;
 }
 table, th, td {
   border-collapse: collapse;
@@ -49,11 +52,13 @@ table.item-table td {
   vertical-align: top;
 }
 
-/* 商品リストタイトル */
-.item-title {
-  display: flex;
+/* テーブルの並び替え */
+.sort.desc:after {
+  content:"▼";
 }
-
+.sort.asc:after {
+  content:"▲";
+}
 
 /* ボタン */
 .btn {

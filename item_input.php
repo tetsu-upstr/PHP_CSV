@@ -15,18 +15,6 @@ function h($s) {
 $pageFlag = 0;
 $error = validatation_item($_POST);
 
-// if (!empty($_POST['jan'])) {
-//   // JAN(ユニーク)の重複確認
-//   $stmt = $pdo->prepare("SELECT * FROM item WHERE jan = :jan limit 1");
-//   $stmt->execute(array(':jan' => $_POST['jan']));
-//   $result = $stmt->fetch();
-
-//   if ($result > 0) {
-//     $error[] = '「JAN」は既に登録されています。';
-//   }
-
-// }
-
 // Flag1 確認画面
 if (!empty($_POST['btn_confirm']) && empty($error)) {
   $pageFlag = 1;

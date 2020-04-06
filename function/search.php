@@ -47,6 +47,8 @@
     // 売上金額で並び替え
     $sql .= " ORDER BY proceeds DESC";
 
+   
+
   }
 
   $result = $pdo->prepare($sql);
