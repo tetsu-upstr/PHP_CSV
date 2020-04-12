@@ -167,6 +167,7 @@ var array01 = [];
 var array02 = [];
 
 $(function(){
+  
   // labelsの値を取得
   $('.js-sales_month').each(function(){
     var amount01 = $(this).find('span').text();
@@ -178,9 +179,8 @@ $(function(){
     array02.push(amount02);
   })
 
-
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var chart = new Chart(ctx, {
     // 作成したいチャートのタイプ
     type: 'bar',
 
@@ -198,7 +198,7 @@ var chart = new Chart(ctx, {
 
     // ここに設定オプションを書きます
     options: { responsive: false }
-});
+  });
 
 });
 

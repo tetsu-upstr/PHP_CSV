@@ -44,8 +44,8 @@
       $sql .= "AND 0";
     }
 
-    // 売上金額で並び替え
-    $sql .= " ORDER BY proceeds DESC";
+    // 売上金額で並び替え（販売月と商品名でグループ化）
+    $sql .= " GROUP BY sale_month, item_name ORDER BY proceeds DESC";
 
   }
 
