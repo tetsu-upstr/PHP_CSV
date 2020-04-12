@@ -9,8 +9,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <!-- List.js CDN -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
   <title>Sales</title>
 </head>
 

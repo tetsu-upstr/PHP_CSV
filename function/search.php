@@ -47,16 +47,12 @@
     // 売上金額で並び替え
     $sql .= " ORDER BY proceeds DESC";
 
-   
-
   }
 
   $result = $pdo->prepare($sql);
   $result->bindValue(':item_name', $name, PDO::PARAM_STR);
   $result->bindValue(':store', $store, PDO::PARAM_STR);
   $result->execute($data);
-
-  // var_dump($result);
 
   // ヒット件数を表示
   $count = $result->rowCount();

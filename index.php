@@ -1,6 +1,7 @@
 <?php
 require 'header.php';
 require 'function/search.php';
+
 ?>
 
 <!-- 
@@ -12,7 +13,6 @@ require 'function/search.php';
     5.<tbody class="list">とクラス名を指定
     6.scriptタグ内のoptionでソートしたい要素名を追記
 -->
-
 
 <body>
 <div class="container">
@@ -50,16 +50,20 @@ require 'function/search.php';
 </div>
 
 <div class="container">
+
+  <!-- Chart.jsのグラフ描画 -->
+  <canvas id="myChart" width="400" height="300"></canvas>
+
   <caption class="table-title">販売実績</caption>
   <table class="item-table" id="results">
     <thead>
       <tr>
-        <th class="sort" data-sort="name">品名</th>
-        <th>販売月</th>
-        <th class="sort" data-sort="amount">数量</th>
-        <th>単価</th>
-        <th class="sort" data-sort="proceeds">売上金額</th>
-        <th>店舗</th>
+        <th class="sort" data-sort="name"><span>品名</span></th>
+        <th class="sort" data-sort="month"><span>販売月</span></th>
+        <th class="sort" data-sort="amount"><span>数量</span></th>
+        <th><span>単価</span></th>
+        <th class="sort proceeds" data-sort="proceeds"><span>売上金額</span></th>
+        <th><span>店舗</span></th>
       </tr>
     </thead>
     <tbody class="list">
@@ -68,20 +72,28 @@ require 'function/search.php';
           foreach($result as $row) {
             echo '<tr>';
             echo '<td class="name">' . $row['item_name'] .'</td>';
-            echo '<td>' . $row['sale_month'] .'</td>';
+            echo '<td class="js-sales_month month"><span>' . $row['sale_month'] .'</span></td>';
             echo '<td class="amount">' . $row['amount'] .'</td>';
             echo '<td>' . $row['unit_price'] .'</td>';
-            echo '<td class="proceeds">' . $row['proceeds'] .'</td>';
+            echo '<td class="js-proceeds proceeds"><span>' . $row['proceeds'] .'</span></td>';
             echo '<td>' . $row['store'] .'</td>';
             echo '</tr>';
+
           }
+
+          
         }
+
         ?>
     </tbody>
   </table>
 </div>
 
 <?php
+  // $arr = json_encode($row);
+  // // var_dump($sql);
+  // echo $arr;
+
   // 商品リストの呼び出しSQL
   $sql = "SELECT * FROM item";
   $result = $pdo->query($sql);
@@ -130,17 +142,65 @@ require 'function/search.php';
 
 // テーブルの並び替え
 var options = {
-  valueNames: [ 'category', 'name', 'jan', 'amount', 'proceeds']
+  valueNames: [ 'category', 'name', 'jan', 'month', 'amount', 'proceeds']
 };
 
+// 販売実績
+var results = new List('results', options);
+results.sort( 'month', {order : 'asc' });
+results.sort( 'amount', {order : 'desc' });
+results.sort( 'proceeds', {order : 'desc' });
+
+// 商品リスト
 var itemList = new List('items', options);
 itemList.sort( 'category', {order : 'desc' });
 itemList.sort( 'jan', {order : 'desc' });
 
-var results = new List('results', options);
-results.sort( 'amount', {order : 'desc' });
-results.sort( 'proceeds', {order : 'desc' });
 
+// < Chart.js MITライセンス >
+// Copyright (c) 2018 Chart.js Contributors
+// Released under the MIT license
+// https://opensource.org/licenses/MIT
+
+//項目用の配列を定義
+var array01 = [];
+var array02 = [];
+
+$(function(){
+  // labelsの値を取得
+  $('.js-sales_month').each(function(){
+    var amount01 = $(this).find('span').text();
+    array01.push(amount01);
+  })
+  // dataの値を取得
+  $('.js-proceeds').each(function(){
+    var amount02 = $(this).find('span').text();
+    array02.push(amount02);
+  })
+
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // 作成したいチャートのタイプ
+    type: 'bar',
+
+    // データセットのデータ
+    data: {
+        // labels: ['1月', '2月', '3月'],
+        labels: array01,
+        datasets: [{
+            label: "販売実績の推移",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: array02
+        }]
+    },
+
+    // ここに設定オプションを書きます
+    options: { responsive: false }
+});
+
+});
 
 </script>
 </body>
