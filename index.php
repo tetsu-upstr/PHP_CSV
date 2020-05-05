@@ -84,10 +84,6 @@ require 'function/search.php';
 </div>
 
 <?php
-  // $arr = json_encode($row);
-  // // var_dump($sql);
-  // echo $arr;
-
   // 商品リストの呼び出しSQL
   $sql = "SELECT * FROM item";
   $result = $pdo->query($sql);
